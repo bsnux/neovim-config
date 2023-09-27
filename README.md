@@ -42,7 +42,7 @@ git submodule add https://github.com/neovim/nvim-lspconfig.git plugins/opt/nvim-
 :CocInstall coc-yaml
 ```
 
-## Installing coc version from file
+## Installing coc plugins from file
 
 ```sh
 vi coc.lua
