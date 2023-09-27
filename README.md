@@ -35,3 +35,9 @@ Adding a new submodule for a new plugin as optional:
 ```sh
 git submodule add https://github.com/neovim/nvim-lspconfig.git plugins/opt/nvim-lspconfig
 ```
+
+Installing extensions for coc.nvim
+
+```
+:CocInstall coc-yaml
+```
