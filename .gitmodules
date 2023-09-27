@@ -13,3 +13,15 @@
 [submodule "plugins/start/vim-vsnip"]
 	path = plugins/start/vim-vsnip
 	url = https://github.com/hrsh7th/vim-vsnip.git
+[submodule "plugins/start/nvim-lspconfig"]
+	path = plugins/start/nvim-lspconfig
+	url = https://github.com/neovim/nvim-lspconfig.git
+[submodule "plugins/start/papercolor-theme"]
+	path = plugins/start/papercolor-theme
+	url = https://github.com/NLKNguyen/papercolor-theme.git
+[submodule "plugins/start/plenary.nvim"]
+	path = plugins/start/plenary.nvim
+	url = https://github.com/nvim-lua/plenary.nvim.git
+[submodule "plugins/start/telescope.nvim"]
+	path = plugins/start/telescope.nvim
+	url = https://github.com/nvim-telescope/telescope.nvim.git
