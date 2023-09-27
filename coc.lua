@@ -12,5 +12,5 @@ plugins  = {
 }
 
 for k,v in pairs(plugins) do
-  vim.cmd('CoCInstall ' .. v)
+  vim.cmd('CocInstall ' .. 'coc-' .. v)
 end
