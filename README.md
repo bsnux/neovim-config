@@ -10,6 +10,14 @@ ln -s ~/github/bsnux/neovim-config/init.lua ~/.config/nvim/init.lua
 ln -s ~/github/bsnux/neovim-config/plugins ~/.config/nvim/pack/plugins
 ```
 
+Installing coc.nvim:
+
+```sh
+cd plugins/start/coc.nvim
+yarn install
+yarn build
+```
+
 Adding a new submodule for a new plugin:
 
 ```sh
