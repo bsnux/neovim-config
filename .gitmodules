@@ -25,3 +25,6 @@
 [submodule "plugins/start/telescope.nvim"]
 	path = plugins/start/telescope.nvim
 	url = https://github.com/nvim-telescope/telescope.nvim.git
+[submodule "plugins/start/vim-fugitive"]
+	path = plugins/start/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive.git

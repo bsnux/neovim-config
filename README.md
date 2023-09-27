@@ -24,6 +24,12 @@ Adding a new submodule for a new plugin:
 git submodule add https://github.com/neovim/nvim-lspconfig.git plugins/start/nvim-lspconfig
 ```
 
+or
+
+```sh
+./add-submodule.sh https://github.com/neovim/nvim-lspconfig.git
+```
+
 Adding a new submodule for a new plugin as optional:
 
 ```sh
