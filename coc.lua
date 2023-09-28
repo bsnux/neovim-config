@@ -2,7 +2,7 @@
 plugins  = {
   'yaml',
   'snippets',
-  'yaml',
+  'sh',
   'tsserver',
   'rust-analyzer',
   'json',
