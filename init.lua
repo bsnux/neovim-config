@@ -57,6 +57,10 @@ cmd [[
     autocmd TermOpen * startinsert
     autocmd BufLeave term://* stopinsert
 ]]
+-- Esc for terminal
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
+
+vim.api.nvim_set_hl(0, 'Comment', { italic=true, fg='grey' })
 
 --== Plugins configuration
 -- Telescope
