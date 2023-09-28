@@ -70,7 +70,15 @@ map('n', '<leader>fg', [[<cmd>lua require('telescope.builtin').live_grep({})<CR>
 
 -- nvim-lspconfig
 local lspconfig = require('lspconfig')
-lspconfig.tsserver.setup {}
+lspconfig.tsserver.setup {
+  on_attach = on_attach,
+  root_dir = lspconfig.util.root_pattern("package.json"),
+  single_file_support = false
+}
+lspconfig.denols.setup {
+  on_attach = on_attach,
+  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+}
 lspconfig.rust_analyzer.setup {
   -- Server-specific settings. See `:help lspconfig-setup`
   settings = {
