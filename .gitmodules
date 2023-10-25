@@ -28,3 +28,6 @@
 [submodule "plugins/start/vim-fugitive"]
 	path = plugins/start/vim-fugitive
 	url = https://github.com/tpope/vim-fugitive.git
+[submodule "plugins/start/nx.nvim"]
+	path = plugins/start/nx.nvim
+	url = https://github.com/Equilibris/nx.nvim.git

@@ -1,14 +1,15 @@
 -- Installing coc-nvim plugins
 plugins  = {
-  'yaml',
-  'snippets',
-  'sh',
-  'tsserver',
-  'rust-analyzer',
-  'json',
-  'go',
-  'docker',
   'deno',
+  'docker',
+  'go',
+  'json',
+  'prettier',
+  'rust-analyzer',
+  'sh',
+  'snippets',
+  'tsserver',
+  'yaml',
 }
 
 for k,v in pairs(plugins) do

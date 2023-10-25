@@ -32,12 +32,19 @@ g.mapleader = ','
 -- Mappings
 map('n', '<C-l>', '<cmd>noh<CR>', {})
 
--- Emacs keybindings
+-- Emacs keybindings for insert mode
 map('i', '<c-a>', '<Home>', {})
 map('i', '<c-e>', '<End>', {})
 map('i', '<c-k>', '<Esc>d$i', {})
 map('i', '<c-b>', '<Esc>i', {})
 map('i', '<c-f>', '<Esc>lli', {})
+
+-- Emacs keybindings for command mode
+map('c', '<c-a>', '<Home>', { noremap= true } )
+map('c', '<c-b>', '<Left>', { noremap= true })
+map('c', '<c-d>', '<Del>', { noremap= true })
+map('c', '<c-e>', '<End>', { noremap= true })
+map('c', '<c-f>', '<Right>', { noremap= true })
 
 -- netrw
 g.netrw_banner = 0
@@ -60,7 +67,11 @@ cmd [[
 -- Esc for terminal
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
+-- Italic for comments
 vim.api.nvim_set_hl(0, 'Comment', { italic=true, fg='grey' })
+
+-- vertical split bar style
+cmd [[ hi VertSplit guibg=#a3a3a3 ]]
 
 --== Plugins configuration
 -- Telescope
@@ -75,6 +86,7 @@ lspconfig.tsserver.setup {
   root_dir = lspconfig.util.root_pattern("package.json"),
   single_file_support = false
 }
+-- initialize workspace executing :CocCommand deno.initializeWorkspace
 lspconfig.denols.setup {
   on_attach = on_attach,
   root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
@@ -131,10 +143,15 @@ require('lualine').setup()
 -- Use Tab for trigger completion with characters ahead and navigate
 -- NOTE: There's always a completion item selected by default, you may want to enable
 -- no select by setting `"suggest.noselect": true` in your configuration file
--- NOTE: Use command ':verbose imap <tab>' to make sure Tab is not mapped by
--- other plugins before putting this into your config
 local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
-vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<TAB>" : coc#refresh()', opts)
 vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 -- Use <c-j> to trigger snippets
 vim.keymap.set("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
+
+-- Fugitive keybindings
+map('n', '<leader>gd', ':Git diff<CR>', {})
+
+-- nx.vim
+require('nx').setup{
+  nx_cmd_root = 'npx nx',
+}
