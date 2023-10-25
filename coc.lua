@@ -10,6 +10,7 @@ plugins  = {
   'snippets',
   'tsserver',
   'yaml',
+  'pairs',
 }
 
 for k,v in pairs(plugins) do
