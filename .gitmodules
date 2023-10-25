@@ -31,6 +31,3 @@
 [submodule "plugins/start/nx.nvim"]
 	path = plugins/start/nx.nvim
 	url = https://github.com/Equilibris/nx.nvim.git
-[submodule "plugins/start/dropbar.nvim"]
-	path = plugins/start/dropbar.nvim
-	url = https://github.com/Bekaboo/dropbar.nvim
