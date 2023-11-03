@@ -31,3 +31,6 @@
 [submodule "plugins/start/nx.nvim"]
 	path = plugins/start/nx.nvim
 	url = https://github.com/Equilibris/nx.nvim.git
+[submodule "plugins/start/vim-hcl"]
+	path = plugins/start/vim-hcl
+	url = https://github.com/jvirtanen/vim-hcl.git
