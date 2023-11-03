@@ -11,6 +11,7 @@ plugins  = {
   'tsserver',
   'yaml',
   'pairs',
+  'pyright',
 }
 
 for k,v in pairs(plugins) do
