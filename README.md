@@ -1,50 +1,15 @@
 # neovim config
 
-Personal configuration for NeoVim editor
+Personal configuration for NeoVim editor using [lazy.nvim](https://github.com/folke/lazy.nvim)
+package manager.
 
-## Creating symlinks to your home configuration folder:
+## Installation
 
-```sh
-mkdir -p ~/.config/nvim/pack
-ln -s ~/github/bsnux/neovim-config/init.lua ~/.config/nvim/init.lua
-ln -s ~/github/bsnux/neovim-config/plugins ~/.config/nvim/pack/plugins
-```
-
-## Installing coc.nvim:
-
-```sh
-cd plugins/start/coc.nvim
-yarn install
-yarn build
-```
-
-## Adding a new submodule for a new plugin:
-
-```sh
-git submodule add https://github.com/neovim/nvim-lspconfig.git plugins/start/nvim-lspconfig
-```
-
-or
-
-```sh
-./add-submodule.sh https://github.com/neovim/nvim-lspconfig.git
-```
-
-## Adding a new submodule for a new plugin as optional:
-
-```sh
-git submodule add https://github.com/neovim/nvim-lspconfig.git plugins/opt/nvim-lspconfig
-```
-
-## Installing extensions for coc.nvim
+Clone this repo and create a symlink to your NeoVim config file:
 
 ```
-:CocInstall coc-yaml
+git clone https://github.com/bsnux/neovim-config.git neovim-config
+ln -s neovim-config/init.lua ~/.config/nvim/init.lua
 ```
 
-## Installing coc plugins from file
-
-```sh
-vi coc.lua
-:luafile %
-```
+For LSP servers, you'll need to install them by hand.
