@@ -1,7 +1,8 @@
 {
     "coc.preferences.formatOnSaveFiletypes": [
         "typescript",
-        "golang"
+        "golang",
+        "python"
     ],
     "languageserver": {
         "golang": {

@@ -76,6 +76,9 @@ cmd [[ hi VertSplit guibg=#a3a3a3 ]]
 -- yank to system clipboard
 vim.api.nvim_set_option("clipboard","unnamed")
 
+-- open nvim configuration file
+map('n', '<leader>c', ':e ~/.config/nvim/init.lua<CR>', {})
+
 --== Plugins configuration
 -- Telescope
 map('n', '<Leader>ff',[[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]] , {noremap = true})
