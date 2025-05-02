@@ -80,7 +80,7 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
 
--- Plugins managed by lazy.vim
+-- Plugins managed by lazy.vim: https://github.com/folke/lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -137,7 +137,7 @@ require("lazy").setup({
       configs.setup({
           ensure_installed = {
             "lua", "vim", "vimdoc", "javascript", "typescript", "python",
-            "dockerfile", "bash", "hcl", "terraform"
+            "dockerfile", "bash", "hcl", "terraform", "markdown",
           },
           sync_install = false,
           highlight = { enable = true },
@@ -156,15 +156,19 @@ require("lazy").setup({
   },
   {
     'hrsh7th/nvim-cmp',
-    dependencies = {'L3MON4D3/LuaSnip'},
+    dependencies = { 'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ', 'hrsh7th/cmp-vsnip' },
     config = function ()
       local cmp = require('cmp')
-      local luasnip = require('luasnip')
       cmp.setup {
         snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
+            expand = function(args)
+              vim.fn["vsnip#anonymous"](args.body)
+            end,
+        },
+        sources = {
+          { name = 'buffer' },
+          { name = 'nvim_lsp' },
+          { name = 'vsnip' },
         },
         mapping = cmp.mapping.preset.insert({
           ['<C-Space>'] = cmp.mapping.complete(),
@@ -182,18 +186,14 @@ require("lazy").setup({
             end
           end, { 'i', 's' }),
         }),
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-        },
       }
     end
   },
   {
     'neovim/nvim-lspconfig',
-    dependencies = {'hrsh7th/nvim-cmp', 'hrsh7th/cmp-nvim-lsp', 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip'},
+    dependencies = { 'hrsh7th/cmp-nvim-lsp' },
     config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
       require'lspconfig'.pyright.setup{
         capabilities = capabilities,
       }
@@ -203,10 +203,17 @@ require("lazy").setup({
       require('lspconfig').yamlls.setup {
         capabilities = capabilities,
       }
+      require('lspconfig').terraformls.setup {
+        capabilities = capabilities,
+      }
     end
   },
   {
     -- `pyright` can't format files so using `black` external plugin
     'psf/black'
   },
+  {
+    -- <leader><leader>w and <leader><leader>b
+    'easymotion/vim-easymotion'
+  }
 })
