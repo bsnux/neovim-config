@@ -206,6 +206,11 @@ require("lazy").setup({
       require('lspconfig').terraformls.setup {
         capabilities = capabilities,
       }
+      require('lspconfig').powershell_es.setup {
+        capabilities = capabilities,
+        bundle_path = "~/.local/share/pwsh-editor-services",
+      }
+
     end
   },
   {
