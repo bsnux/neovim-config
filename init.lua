@@ -1,6 +1,13 @@
 --
 -- NeoVim configuration
 --
+
+-- Useful commands:
+-- :g/^$/d: Delete blank lines
+
+
+
+-- Starting conf
 local o = vim.o				-- global options
 local wo = vim.wo			-- window scope options
 local bo = vim.bo			-- buffer scope options
@@ -35,6 +42,7 @@ map('i', '<c-e>', '<End>', {})
 map('i', '<c-k>', '<Esc>d$i', {})
 map('i', '<c-b>', '<Esc>i', {})
 map('i', '<c-f>', '<Esc>lli', {})
+map('i', '<c-y>', '<Esc>pi', {})
 
 -- Emacs keybindings for command mode
 map('c', '<c-a>', '<Home>', { noremap= true } )
@@ -65,7 +73,8 @@ cmd [[
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]])
 
 -- vertical split bar style
-cmd [[ hi VertSplit guibg=#a3a3a3 ]]
+cmd [[ hi VertSplit guibg=#ff0000 ]]
+--cmd [[ hi VertSplit cterm=NONE ctermfg=Green ctermbg=NONE ]]
 
 -- yank to system clipboard
 vim.api.nvim_set_option("clipboard","unnamed")
@@ -137,7 +146,7 @@ require("lazy").setup({
       configs.setup({
           ensure_installed = {
             "lua", "vim", "vimdoc", "javascript", "typescript", "python",
-            "dockerfile", "bash", "hcl", "terraform", "markdown",
+            "dockerfile", "bash", "hcl", "terraform", "markdown", "elixir",
           },
           sync_install = false,
           highlight = { enable = true },
@@ -179,12 +188,23 @@ require("lazy").setup({
           ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
+            elseif vim.fn['vsnip#expandable']() == 1 then
+              vim.fn['vsnip#expand']()
+            elseif vim.fn['vsnip#jumpable'](1) == 1 then
+              vim.fn['vsnip#jump'](1)
             else
               fallback()
             end
           end, { 'i', 's' }),
+          -- ['<Tab>'] = cmp.mapping(function(fallback)
+          --   if cmp.visible() then
+          --     cmp.select_next_item()
+          --   elseif luasnip.expand_or_jumpable() then
+          --     luasnip.expand_or_jump()
+          --   else
+          --     fallback()
+          --   end
+          -- end, { 'i', 's' }),
         }),
       }
     end
@@ -192,9 +212,27 @@ require("lazy").setup({
   {
     'neovim/nvim-lspconfig',
     dependencies = { 'hrsh7th/cmp-nvim-lsp' },
+    opts = {
+     diagnostics = {
+        underline = true,
+        virtual_lines = true,
+        update_in_insert = false,
+        severity_sort = true,
+        float = {
+          border = "rounded",
+          source = "true",
+        },
+        --update_in_insert = false,
+        --virtual_text = {
+        --  spacing = 2,
+        --  source = "if_many",
+        --  prefix = "●",
+        --},
+    }
+   },
     config = function()
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      require'lspconfig'.pyright.setup{
+            require'lspconfig'.pyright.setup{
         capabilities = capabilities,
       }
       require'lspconfig'.jsonls.setup {
@@ -210,7 +248,10 @@ require("lazy").setup({
         capabilities = capabilities,
         bundle_path = "~/.local/share/pwsh-editor-services",
       }
-
+      require('lspconfig').elixirls.setup {
+        capabilities = capabilities,
+        cmd = {"/opt/homebrew/bin/elixir-ls"},
+      }
     end
   },
   {
@@ -220,5 +261,93 @@ require("lazy").setup({
   {
     -- <leader><leader>w and <leader><leader>b
     'easymotion/vim-easymotion'
-  }
+  },
+  {
+  "coffebar/neovim-project",
+    opts = {
+      projects = { -- define project roots
+        "~/github/HerbalifeHub/*",
+      },
+      picker = {
+        type = "telescope", -- one of "telescope", "fzf-lua", or "snacks"
+      }
+    },
+    init = function()
+      -- enable saving the state of plugins in the session
+      vim.opt.sessionoptions:append("globals") -- save global variables that start with an uppercase letter and contain at least one lowercase letter.
+    end,
+    dependencies = {
+      { "nvim-lua/plenary.nvim" },
+      -- optional picker
+      { "nvim-telescope/telescope.nvim", tag = "0.1.4" },
+      -- optional picker
+      { "ibhagwan/fzf-lua" },
+      -- optional picker
+      { "folke/snacks.nvim" },
+      { "Shatur/neovim-session-manager" },
+    },
+    lazy = false,
+    priority = 100,
+    keys = {
+      {'<Leader>r', "<cmd>NeovimProjectDiscover<CR>", "noremap=true"},
+    }
+  },
+  {
+  "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons", -- optional, but recommended
+    },
+    lazy = false, -- neo-tree will lazily load itself
+    keys = {
+      {'<C-e>', "<cmd>Neotree toggle<CR>", "noremap=true"},
+    }
+  },
+  {
+    "zbirenbaum/copilot.lua",
+    event = "VeryLazy",
+    config = function()
+      require("copilot").setup({
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          accept = false,
+        },
+        panel = {
+          enabled = false
+        },
+        filetypes = {
+          markdown = true,
+          help = true,
+          html = true,
+          javascript = true,
+          typescript = true,
+          ["*"] = true
+        },
+      })
+
+      vim.keymap.set("i", '<C-e>', function()
+        if require("copilot.suggestion").is_visible() then
+          require("copilot.suggestion").accept()
+        else
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-e>", true, false, true), "n", false)
+        end
+      end, {
+          silent = true,
+        })
+    end,
+  },
+  --{
+  --  "nvim-tree/nvim-tree.lua",
+  --  version = "*",
+  --  lazy = false,
+  --  dependencies = {
+  --    "nvim-tree/nvim-web-devicons",
+  --  },
+  --  config = function()
+  --    require("nvim-tree").setup {}
+  --  end
+  --}
 })
