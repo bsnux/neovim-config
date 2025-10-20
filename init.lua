@@ -80,7 +80,7 @@ cmd [[ hi VertSplit guibg=#ff0000 ]]
 vim.api.nvim_set_option("clipboard","unnamed")
 
 -- open nvim configuration file
-map('n', '<leader>c', ':e ~/.config/nvim/init.lua<CR>', {})
+--map('n', '<leader>c', ':e ~/.config/nvim/init.lua<CR>', {})
 
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
@@ -88,6 +88,15 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
+-- CopilotChat: Auto-command to customize chat buffer behavior
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = 'copilot-*',
+  callback = function()
+    vim.opt_local.relativenumber = false
+    vim.opt_local.number = false
+    vim.opt_local.conceallevel = 0
+  end,
+})
 
 -- Plugins managed by lazy.vim: https://github.com/folke/lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -232,7 +241,7 @@ require("lazy").setup({
    },
     config = function()
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
-            require'lspconfig'.pyright.setup{
+      require'lspconfig'.pyright.setup{
         capabilities = capabilities,
       }
       require'lspconfig'.jsonls.setup {
@@ -337,6 +346,77 @@ require("lazy").setup({
       end, {
           silent = true,
         })
+    end,
+  },
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    dependencies = {
+      { "nvim-lua/plenary.nvim", branch = "master" },
+    },
+    keys = {
+      {'<Leader>c', "<cmd>CopilotChatToggle<CR>", "noremap=true"},
+    }
+    ,
+    build = "make tiktoken",
+    opts = {
+      --window = {
+      --  layout = 'float',
+      --  width = 80, -- Fixed width in columns
+      --  height = 20, -- Fixed height in rows
+      --  border = 'rounded', -- 'single', 'double', 'rounded', 'solid'
+      --  title = '🤖 AI Assistant',
+      --  zindex = 100, -- Ensure window stays on top
+      --},
+
+      auto_insert_mode = true,
+
+      headers = {
+        user = '👤 You',
+        assistant = '🤖 Copilot',
+        tool = '🔧 Tool',
+      },
+
+      separator = '━━',
+      auto_fold = true,
+      highlight_headers = false,
+      error_header = '> [!ERROR] Error',
+   },
+  },
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function ()
+      require('render-markdown').setup({
+        file_types = { 'markdown', 'copilot-chat' },
+      })
+    end,
+  },
+  {
+  "RRethy/base16-nvim",
+    lazy = false,
+    priority = 1000,
+    telescope = true,
+    config = function()
+      -- vim.cmd("colorscheme base16-terracotta-dark")
+    end,
+  },
+  {
+    'stevearc/aerial.nvim',
+     opts = {},
+     dependencies = {
+        "nvim-treesitter/nvim-treesitter",
+        "nvim-tree/nvim-web-devicons"
+     },
+    config = function ()
+      require("aerial").setup({
+        -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+        on_attach = function(bufnr)
+          -- Jump forwards/backwards with '{' and '}'
+          vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+          vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+        end,
+      })
+      vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
     end,
   },
   --{
