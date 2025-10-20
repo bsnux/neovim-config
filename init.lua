@@ -337,7 +337,7 @@ require("lazy").setup({
         },
       })
 
-      vim.keymap.set("i", '<C-e>', function()
+      vim.keymap.set("i", '<Tab>', function()
         if require("copilot.suggestion").is_visible() then
           require("copilot.suggestion").accept()
         else
@@ -418,7 +418,7 @@ require("lazy").setup({
       })
       vim.keymap.set("n", "<leader>a", "<cmd>AerialToggle!<CR>")
     end,
-  },
+  }
   --{
   --  "nvim-tree/nvim-tree.lua",
   --  version = "*",
