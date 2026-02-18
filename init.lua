@@ -1,4 +1,6 @@
 --
+--
+--
 -- NeoVim configuration
 --
 
@@ -51,6 +53,9 @@ map('c', '<c-d>', '<Del>', { noremap= true })
 map('c', '<c-e>', '<End>', { noremap= true })
 map('c', '<c-f>', '<Right>', { noremap= true })
 
+-- Find merge conflict markers
+map('n', '<leader>fc', [[:/\v^[<|=>]{7}( .*\|$)<CR>]], { noremap = true, silent = true })
+
 -- netrw
 g.netrw_banner = 0
 g.netrw_liststyle = 3
@@ -97,6 +102,52 @@ vim.api.nvim_create_autocmd('BufEnter', {
     vim.opt_local.conceallevel = 0
   end,
 })
+
+-- Custom functions
+
+-- Insert current week number
+function InsertCurrentWeek()
+  -- Get the current date/time as a timestamp
+  local now_timestamp = os.time()
+
+  -- Get a table with date components for the current time
+  local now_table = os.date("*t", now_timestamp)
+
+  -- os.date("*t").wday returns weekday as a number (Sunday is 1, Monday is 2, ..., Saturday is 7)
+  local current_wday = now_table.wday
+
+  -- Calculate the number of days to subtract to get to Monday.
+  -- If today is Monday (wday=2), days_to_subtract is 0.
+  -- If today is Sunday (wday=1), days_to_subtract is 6 (to go back to previous Monday).
+  local days_to_subtract
+  if current_wday == 1 then
+      -- If Sunday, go back 6 days to Monday
+      days_to_subtract = 6
+  else
+      -- For other days, subtract (wday - 2) days
+      days_to_subtract = current_wday - 2
+  end
+
+  -- Calculate timestamp for the start of the week (Monday)
+  -- 86400 seconds in a day
+  local start_of_week_timestamp = now_timestamp - (days_to_subtract * 86400)
+
+  -- Calculate timestamp for the end of the week (Sunday)
+  -- Add 6 days (6 * 86400 seconds) to the start of the week timestamp
+  local end_of_week_timestamp = start_of_week_timestamp + (6 * 86400)
+
+  -- Format the timestamps into readable date strings
+  local start_date_str = os.date("%Y-%m-%d", start_of_week_timestamp)
+  local end_date_str = os.date("%Y-%m-%d", end_of_week_timestamp)
+
+  local week_number = os.date("%V")
+  vim.api.nvim_put({"Week " .. week_number .. " --- " .. start_date_str .. " - " .. end_date_str}, 'c', true, true)
+end
+vim.api.nvim_create_user_command(
+  'InsertCurrentWeek',
+  InsertCurrentWeek,
+  {}
+)
 
 -- Plugins managed by lazy.vim: https://github.com/folke/lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -156,6 +207,7 @@ require("lazy").setup({
           ensure_installed = {
             "lua", "vim", "vimdoc", "javascript", "typescript", "python",
             "dockerfile", "bash", "hcl", "terraform", "markdown", "elixir",
+            "gleam"
           },
           sync_install = false,
           highlight = { enable = true },
@@ -221,6 +273,9 @@ require("lazy").setup({
   {
     'neovim/nvim-lspconfig',
     dependencies = { 'hrsh7th/cmp-nvim-lsp' },
+    keys = {
+      {'<leader>gg', "<cmd>lua vim.lsp.buf.definition()<CR>", {noremap = true, silent = true}},
+    },
     opts = {
      diagnostics = {
         underline = true,
@@ -261,6 +316,25 @@ require("lazy").setup({
         capabilities = capabilities,
         cmd = {"/opt/homebrew/bin/elixir-ls"},
       }
+      require('lspconfig').ts_ls.setup {
+        capabilities = capabilities,
+        filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+        --cmd = { "typescript-language-server", "--stdio" },
+      }
+      require('lspconfig').rust_analyzer.setup({
+        capabilities = capabilities,
+        settings = {
+            ['rust-analyzer'] = {
+                check = {
+                    command = "clippy",
+                },
+                checkOnSave = {
+                    enable = true,
+	        },
+	    },
+       }})
+      vim.lsp.config(capabilities)
+      --vim.lsp.enable('gleam')
     end
   },
   {
