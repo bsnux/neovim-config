@@ -188,7 +188,7 @@ require("lazy").setup({
   {
     'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' },
     keys = {
-      {'<Leader>ff', "<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>", "noremap=true"},
+      {'<Leader>ff', "<cmd>lua require('telescope.builtin').find_files({previewer = false, hidden = true})<CR>", "noremap=true"},
       {'<leader>bb', "<cmd>lua require('telescope.builtin').buffers({previewer = false})<CR>", "noremap=true"},
       {'<leader>fg', "<cmd>lua require('telescope.builtin').live_grep({})<CR>", "noremap=true"}
     }
@@ -274,7 +274,16 @@ require("lazy").setup({
     lazy = false, -- neo-tree will lazily load itself
     keys = {
       {'<C-e>', "<cmd>Neotree toggle<CR>", "noremap=true"},
-    }
+    },
+    opts = {
+      filesystem = {
+        filtered_items = {
+          visible = true,       -- show hidden files but dimmed
+          hide_dotfiles = false,
+          hide_gitignored = false,
+        },
+      },
+    },
   },
   {
     "zbirenbaum/copilot.lua",
