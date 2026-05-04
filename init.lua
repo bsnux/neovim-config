@@ -165,6 +165,44 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   {
+    'akinsho/bufferline.nvim',
+    version = "*",
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        mode = "buffers",
+        diagnostics = "nvim_lsp",
+        diagnostics_indicator = function(_, _, diag)
+          local icons = { error = " ", warning = " ", info = " " }
+          local s = ""
+          for level, icon in pairs(icons) do
+            if diag[level] and diag[level] > 0 then
+              s = s .. icon .. diag[level] .. " "
+            end
+          end
+          return vim.trim(s)
+        end,
+        offsets = {
+          {
+            filetype = "neo-tree",
+            text = "File Explorer",
+            highlight = "Directory",
+            separator = true,
+          },
+        },
+        separator_style = "slant",
+        show_buffer_close_icons = true,
+        show_close_icon = false,
+        color_icons = true,
+      },
+    },
+    keys = {
+      { '<leader>bp', '<cmd>BufferLineCyclePrev<CR>', desc = 'Prev buffer' },
+      { '<leader>bn', '<cmd>BufferLineCycleNext<CR>', desc = 'Next buffer' },
+      { '<leader>bd', '<cmd>bdelete<CR>',             desc = 'Close buffer' },
+    },
+  },
+  {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function ()
